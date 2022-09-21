@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AudioFile", "src\AudioFile\AudioFile.csproj", "{125BB3DC-9901-4331-99B2-88E5E66CF723}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abstractions", "src\Abstractions\Abstractions.csproj", "{E22C915E-7EE0-46D0-BA14-6361B35C8AF2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AudioFile.Tests", "src\AudioFileTests\AudioFile.Tests.csproj", "{FCCCF2A7-CF83-46D8-9618-BC5B8D9D1AF9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FFMpeg", "src\FFMpeg\FFMpeg.csproj", "{B5A00B41-0C58-4AF0-BA3B-A13874EB8CE8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FFMpegTests", "src\FFMpegTests\FFMpegTests.csproj", "{50EA742C-E9B6-4BCA-8263-F22F111BF991}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Audio", "Audio", "{44CB2186-6193-4DC8-8D91-7DFA0BCB5D5C}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\Production\Samples\_Hats\Deadmau5 Hats\Amped\XF_HatAmp001.wav = ..\..\Production\Samples\_Hats\Deadmau5 Hats\Amped\XF_HatAmp001.wav
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{125BB3DC-9901-4331-99B2-88E5E66CF723}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{125BB3DC-9901-4331-99B2-88E5E66CF723}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{125BB3DC-9901-4331-99B2-88E5E66CF723}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{125BB3DC-9901-4331-99B2-88E5E66CF723}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E22C915E-7EE0-46D0-BA14-6361B35C8AF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E22C915E-7EE0-46D0-BA14-6361B35C8AF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E22C915E-7EE0-46D0-BA14-6361B35C8AF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E22C915E-7EE0-46D0-BA14-6361B35C8AF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCCCF2A7-CF83-46D8-9618-BC5B8D9D1AF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCCCF2A7-CF83-46D8-9618-BC5B8D9D1AF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCCCF2A7-CF83-46D8-9618-BC5B8D9D1AF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCCCF2A7-CF83-46D8-9618-BC5B8D9D1AF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5A00B41-0C58-4AF0-BA3B-A13874EB8CE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5A00B41-0C58-4AF0-BA3B-A13874EB8CE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5A00B41-0C58-4AF0-BA3B-A13874EB8CE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5A00B41-0C58-4AF0-BA3B-A13874EB8CE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50EA742C-E9B6-4BCA-8263-F22F111BF991}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50EA742C-E9B6-4BCA-8263-F22F111BF991}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50EA742C-E9B6-4BCA-8263-F22F111BF991}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50EA742C-E9B6-4BCA-8263-F22F111BF991}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {783F1F5A-29A0-4EF7-8345-EE7E15909B42}
+	EndGlobalSection
+EndGlobal
