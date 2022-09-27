@@ -1,106 +1,49 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using FFMpeg.Abstractions;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
+using System.Text;
 
 namespace FFMpeg
 {
     public class LUFSProvider
     {
-        private const int SUCCESS_EXIT_CODE = 0x00000000;
-        private readonly ILogger logger;
-        private IResultBuilder? resultBuilder = new ResultBuilder();
-        private Process _process;
+        private readonly IExecuteProcess _executeProcess;
+        private ResultBuilder _resultBuilder;
+        String strError;
+
 
         public NormalizationResult Result { get; private set; }
-        public LUFSProvider(ILogger logger)
+        /// <summary>
+        /// Constructor for <see cref="LUFSProvider"/>.
+        /// </summary>
+        /// <param name="executeProcess"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public LUFSProvider(IExecuteProcess executeProcess)
         {
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _executeProcess = executeProcess ?? throw new ArgumentNullException(nameof(executeProcess));
         }
 
-        public async Task GetMeLUFS(string inputFile)
+        public void GetMeLUFS(string inputFile)
         {
-            string? args = null;
-            try
-            {
-                var startInfo = new ProcessStartInfo()
+            var file = new FileInfo(inputFile);
+            _resultBuilder = new ResultBuilder(
+                file.Directory!.FullName + "\\processed." + file.Extension.ToLower(),
+                new AudioModel
                 {
-                    FileName = @"D:\ffmpeg-2022-09-19-git-4ba68639ca-full_build\bin\ffmpeg.exe",
-                    //Getting just the version works.  
-                    //Arguments = "-version",
-                    //Starting to calculate loudness does not. 
-                    Arguments = $" -i '{inputFile}' -af loudnorm=print_format=summary -f null -",
-                    CreateNoWindow = false,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = true,
-                    RedirectStandardError = false,
-                };
+                    Integrated = "-16",
+                    TruePeak = "-1.5",
+                    LRA = "15"
+                });
 
-                _process = new Process { StartInfo = startInfo };
-                SetupSubscriptions();
+            var firstPassArgs = $" -i \"{file.FullName}\" -af loudnorm=I={_resultBuilder.OutputModel.Integrated}:TP={_resultBuilder.OutputModel.TruePeak}:LRA={_resultBuilder.OutputModel.LRA}:print_format=summary -f null -";
+            var firstPassResult = _executeProcess.Run(firstPassArgs);
 
-                try
-                {
-                    _process.Start();
-                    _process.BeginOutputReadLine();
-                    _process.BeginErrorReadLine();
-                    _process.WaitForExit();
-                    logger.LogInformation($"Started processing: (File:- '{inputFile}', '{_process.StartInfo.FileName} {_process.StartInfo.Arguments}'");
-                }
-                catch (Win32Exception wEx)
-                {
-                    var msg = $"An error occured while opening file '{_process.StartInfo.FileName}'";
+            _resultBuilder.ResultModel = firstPassResult;
 
-                }
-                catch (Exception ex)
-                {
-                    Debug.Fail(ex.Message);
-                    throw;
-                }
-
-            }
-            catch (Win32Exception wex) {
-                throw;
-            } catch (Exception ex) {
-                throw;
-            }
+            var secondPassArguments = $" -i \"{file.FullName}\" -af loudnorm=I={_resultBuilder.OutputModel.Integrated}:TP={_resultBuilder.OutputModel.TruePeak}:LRA={_resultBuilder.OutputModel.LRA}:measured_I={_resultBuilder.ResultModel.Integrated}:measured_TP={_resultBuilder.ResultModel.TruePeak}:measured_LRA={_resultBuilder.ResultModel.LRA}:measured_thresh={_resultBuilder.ResultModel.Threshold}:linear=true:print_format=summary  -ar 48000 {_resultBuilder.OutputFile}";
+            var secondPassResult = _executeProcess.Run(secondPassArguments);
         }
-
-        private void SetupSubscriptions()
-        {
-            _process.OutputDataReceived += OnProcessOutputReceived;
-            _process.ErrorDataReceived += OnProcessErrorReceived;
-            _process.Exited += OnProcessExited;
-        }
-
-        private void OnProcessExited(object? sender, EventArgs e)
-        {
-            Result = resultBuilder?.Build() ?? NormalizationResult.Empty;
-        }
-
-        private void OnProcessErrorReceived(object sender, DataReceivedEventArgs e)
-        {
-            var poo = "";
-        }
-
-        private void OnProcessOutputReceived(object sender, DataReceivedEventArgs e)
-        {
-            if (!string.IsNullOrWhiteSpace(e.Data) && resultBuilder != null)
-            {
-                resultBuilder.Add(e.Data);
-            }
-        }
-
     }
-    public enum ProcessingItemStatus
-    {
-        None,
-        Faulted,
-        PassOneStarted,
-        PassOneFinished,
-        PassTwoStarted,
-        PassTwoFinished
-    }
-
 }

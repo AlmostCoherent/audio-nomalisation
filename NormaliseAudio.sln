@@ -18,6 +18,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Audio", "Audio", "{44CB2186
 		..\..\Production\Samples\_Hats\Deadmau5 Hats\Amped\XF_HatAmp001.wav = ..\..\Production\Samples\_Hats\Deadmau5 Hats\Amped\XF_HatAmp001.wav
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NormaliseAudio.Console", "src\NormaliseAudio.Console\NormaliseAudio.Console.csproj", "{384F00A0-4FEB-4827-8120-3E2461A1C0FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFMpeg.Abstractions", "src\FFMpeg.Abstractions\FFMpeg.Abstractions.csproj", "{1630C7D0-A85F-4D32-AD5C-64D9F3C02BFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +48,14 @@ Global
 		{50EA742C-E9B6-4BCA-8263-F22F111BF991}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50EA742C-E9B6-4BCA-8263-F22F111BF991}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50EA742C-E9B6-4BCA-8263-F22F111BF991}.Release|Any CPU.Build.0 = Release|Any CPU
+		{384F00A0-4FEB-4827-8120-3E2461A1C0FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{384F00A0-4FEB-4827-8120-3E2461A1C0FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{384F00A0-4FEB-4827-8120-3E2461A1C0FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{384F00A0-4FEB-4827-8120-3E2461A1C0FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1630C7D0-A85F-4D32-AD5C-64D9F3C02BFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1630C7D0-A85F-4D32-AD5C-64D9F3C02BFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1630C7D0-A85F-4D32-AD5C-64D9F3C02BFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1630C7D0-A85F-4D32-AD5C-64D9F3C02BFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
