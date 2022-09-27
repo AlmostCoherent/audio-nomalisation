@@ -8,8 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="FFMpegCore" Version="4.8.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
     <PackageReference Include="xFFmpeg.NET" Version="7.1.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FFMpeg.Abstractions\FFMpeg.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>
