@@ -23,7 +23,7 @@ namespace FFMPEGProducer
                                         .BuildServiceProvider();
 
             var gmlfs = new LUFSProvider((IExecuteProcess)serviceProvider.GetService(typeof(IExecuteProcess)));
-            var inputFile = @"D:\\OneDrive\\Music\\SubCatTracks\\DevilairxSubCatEP\\SubCat-Hyenas[MST].wav";
+            var inputFile = @"C:\repos\audio\NormaliseAudio\TestAudio\Serum01-Fmin.wav";
             //Act
             gmlfs.GetMeLUFS(inputFile);
         }

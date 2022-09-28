@@ -29,7 +29,7 @@ namespace FFMpeg
         {
             var file = new FileInfo(inputFile);
             _resultBuilder = new ResultBuilder(
-                file.Directory!.FullName + "\\processed." + file.Extension.ToLower(),
+                $"C:\\repos\\audio\\NormaliseAudio\\Processed\\{ file.Name.Replace((file.Extension), "") + Guid.NewGuid() + file.Extension.ToLower() }",
                 new AudioModel
                 {
                     Integrated = "-16",
@@ -42,7 +42,7 @@ namespace FFMpeg
 
             _resultBuilder.ResultModel = firstPassResult;
 
-            var secondPassArguments = $" -i \"{file.FullName}\" -af loudnorm=I={_resultBuilder.OutputModel.Integrated}:TP={_resultBuilder.OutputModel.TruePeak}:LRA={_resultBuilder.OutputModel.LRA}:measured_I={_resultBuilder.ResultModel.Integrated}:measured_TP={_resultBuilder.ResultModel.TruePeak}:measured_LRA={_resultBuilder.ResultModel.LRA}:measured_thresh={_resultBuilder.ResultModel.Threshold}:linear=true:print_format=summary  -ar 48000 {_resultBuilder.OutputFile}";
+            var secondPassArguments = $" -i \"{file.FullName}\" -af loudnorm=I={_resultBuilder.OutputModel.Integrated}:TP={_resultBuilder.OutputModel.TruePeak}:LRA={_resultBuilder.OutputModel.LRA}:measured_I={_resultBuilder.ResultModel.Integrated}:measured_TP={_resultBuilder.ResultModel.TruePeak}:measured_LRA={_resultBuilder.ResultModel.LRA}:measured_thresh={_resultBuilder.ResultModel.Threshold}:linear=true:print_format=summary  -ar 96000 {_resultBuilder.OutputFile}";
             var secondPassResult = _executeProcess.Run(secondPassArguments);
         }
     }
