@@ -16,7 +16,7 @@ namespace FFMpeg
         {
             FFMpegStartInfo = new ProcessStartInfo()
             {
-                FileName = @"D:\ffmpeg-2022-09-19-git-4ba68639ca-full_build\bin\ffmpeg",
+                FileName = "ffmpeg",
                 CreateNoWindow = true,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,

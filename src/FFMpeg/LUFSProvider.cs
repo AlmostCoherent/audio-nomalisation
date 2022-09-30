@@ -7,14 +7,13 @@ using System.Text;
 
 namespace FFMpeg
 {
-    public class LUFSProvider
+    public class LUFSProvider : ILUFSProvider
     {
         private readonly IExecuteProcess _executeProcess;
         private ResultBuilder _resultBuilder;
         String strError;
 
 
-        public NormalizationResult Result { get; private set; }
         /// <summary>
         /// Constructor for <see cref="LUFSProvider"/>.
         /// </summary>
@@ -25,16 +24,16 @@ namespace FFMpeg
             _executeProcess = executeProcess ?? throw new ArgumentNullException(nameof(executeProcess));
         }
 
-        public void GetMeLUFS(string inputFile)
+        public void SetLufsOfInput(string inputFile)
         {
             var file = new FileInfo(inputFile);
             _resultBuilder = new ResultBuilder(
-                $"C:\\repos\\audio\\NormaliseAudio\\Processed\\{ file.Name.Replace((file.Extension), "") + Guid.NewGuid() + file.Extension.ToLower() }",
+                $"{file.DirectoryName}\\{file.Name.Replace((file.Extension), "").Replace(" ", "") + Guid.NewGuid() + file.Extension.ToLower()}",
                 new AudioModel
                 {
                     Integrated = "-16",
                     TruePeak = "-1.5",
-                    LRA = "15"
+                    LRA = "11"
                 });
 
             var firstPassArgs = $" -i \"{file.FullName}\" -af loudnorm=I={_resultBuilder.OutputModel.Integrated}:TP={_resultBuilder.OutputModel.TruePeak}:LRA={_resultBuilder.OutputModel.LRA}:print_format=summary -f null -";
@@ -42,7 +41,7 @@ namespace FFMpeg
 
             _resultBuilder.ResultModel = firstPassResult;
 
-            var secondPassArguments = $" -i \"{file.FullName}\" -af loudnorm=I={_resultBuilder.OutputModel.Integrated}:TP={_resultBuilder.OutputModel.TruePeak}:LRA={_resultBuilder.OutputModel.LRA}:measured_I={_resultBuilder.ResultModel.Integrated}:measured_TP={_resultBuilder.ResultModel.TruePeak}:measured_LRA={_resultBuilder.ResultModel.LRA}:measured_thresh={_resultBuilder.ResultModel.Threshold}:linear=true:print_format=summary  -ar 96000 {_resultBuilder.OutputFile}";
+            var secondPassArguments = $" -i \"{file.FullName}\" -af loudnorm=I={_resultBuilder.OutputModel.Integrated}:TP={_resultBuilder.OutputModel.TruePeak}:LRA={_resultBuilder.OutputModel.LRA}:measured_I={_resultBuilder.ResultModel.Integrated}:measured_TP={_resultBuilder.ResultModel.TruePeak}:measured_LRA={_resultBuilder.ResultModel.LRA}:measured_thresh={_resultBuilder.ResultModel.Threshold}:linear=true:print_format=summary  -ar 192k {_resultBuilder.OutputFile}";
             var secondPassResult = _executeProcess.Run(secondPassArguments);
         }
     }

@@ -9,6 +9,7 @@ namespace FFMpeg
         {
             services.AddScoped<IStartInfoProvider, StartInfoProvider>();
             services.AddScoped<IExecuteProcess, ExecuteProcess>();
+            services.AddScoped<ILUFSProvider, LUFSProvider>();
         }
     }
 }

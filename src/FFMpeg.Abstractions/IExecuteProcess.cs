@@ -1,6 +1,4 @@
-﻿using FFMpeg.Abstractions;
-
-namespace FFMpeg
+﻿namespace FFMpeg.Abstractions
 {
     public interface IExecuteProcess
     {

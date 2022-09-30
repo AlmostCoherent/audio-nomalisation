@@ -1,4 +1,5 @@
-﻿using Files.Abstractions;
+﻿using FFMpeg.Abstractions;
+using Files.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace NormaliseAudio.Api.Controllers
@@ -7,16 +8,19 @@ namespace NormaliseAudio.Api.Controllers
     {
         private readonly IFileCreator _fileCreator;
         private readonly IBaseFileConfig _baseFileConfig;
+        private readonly ILUFSProvider _lufsProvider;
 
-        public AudioController(IFileCreator fileCreator, IBaseFileConfig baseFileConfig)
+        public AudioController(IFileCreator fileCreator, IBaseFileConfig baseFileConfig, ILUFSProvider lufsProvider)
         {
             _fileCreator = fileCreator ?? throw new ArgumentNullException(nameof(fileCreator));
             _baseFileConfig = baseFileConfig ?? throw new ArgumentNullException(nameof(baseFileConfig));
+            _lufsProvider = lufsProvider ?? throw new ArgumentNullException(nameof(lufsProvider));
         }
 
         [HttpPost("normalise", Name = "Normalise")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [RequestSizeLimit(73400320)]
         public async Task<IActionResult> Normalise(IFormFile formFile, CancellationToken cancellationToken)
         {
             if (CheckIfAcceptedAudioFile(formFile))
@@ -24,6 +28,9 @@ namespace NormaliseAudio.Api.Controllers
                 _baseFileConfig.InputFileName = formFile.FileName;
                 var stream = new MemoryStream(new byte[formFile.Length]);
                 await formFile.CopyToAsync(stream, cancellationToken);
+                await _fileCreator.CreateFromStream(stream);
+                _lufsProvider.SetLufsOfInput(Path.Combine(_baseFileConfig.InputPath, _baseFileConfig.InputFileName));
+
                 return Ok(await _fileCreator.CreateFromStream(stream));
             }
             else

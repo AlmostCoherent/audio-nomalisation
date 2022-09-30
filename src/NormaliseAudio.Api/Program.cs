@@ -14,7 +14,6 @@ namespace NormaliseAudio.Api
             {
                 serverOptions.Limits.MaxRequestBodySize = 73400320;
             });
-
             // Add services to the container.
 
             builder.Services.AddControllers();
