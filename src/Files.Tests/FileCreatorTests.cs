@@ -15,7 +15,7 @@ namespace Files.Tests
                 .Returns(Directory.GetParent(Environment.CurrentDirectory).ToString());
             
             var classUnderTest = new FileCreator(mock.Object);
-            var result = classUnderTest.CreateFromStream(new MemoryStream());
+            var result = classUnderTest.CreateFromStream(new MemoryStream(), "test.txt");
             Assert.Fail();
         }
     }

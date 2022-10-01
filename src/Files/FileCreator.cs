@@ -11,15 +11,16 @@ namespace Files
             _baseFileConfig = baseFileConfig ?? throw new ArgumentNullException(nameof(baseFileConfig));
         }
 
-        public async Task<string> CreateFromStream(Stream formFile)
+        public string CreateFromStream(Stream formFile, string fileName, string? path = default)
         {
+            var fileStoreLocation = Path.Combine((path ?? AppContext.BaseDirectory), fileName);
             try {
-                using (var fileStream = File.Create(Path.Combine(_baseFileConfig.InputPath, _baseFileConfig.InputFileName)))
+                using (var fileStream = File.Create(fileStoreLocation))
                 {
                     formFile.Seek(0, SeekOrigin.Begin);
                     formFile.CopyTo(fileStream);
                 }
-                return _baseFileConfig.OutputPath;
+                return fileStoreLocation;
             } 
             catch (Exception ex) {
                 throw;

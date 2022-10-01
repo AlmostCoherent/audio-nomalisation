@@ -43,7 +43,7 @@ namespace NormaliseAudio.Api
                 .UseRouting()
 #if DEBUG && NET6_0_OR_GREATER
                 .UseHttpLogging()
-#endif
+#endif          
                 .UseRequestLocalization()
                 .UseSwaggerUI(c =>
                 {

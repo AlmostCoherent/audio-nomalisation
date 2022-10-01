@@ -24,25 +24,28 @@ namespace FFMpeg
             _executeProcess = executeProcess ?? throw new ArgumentNullException(nameof(executeProcess));
         }
 
-        public void SetLufsOfInput(string inputFile)
+        public string AdjustLufsOfInput(string inputFile)
         {
             var file = new FileInfo(inputFile);
+            var resultPath = Path.Combine(file.DirectoryName ?? "", file.Name.Replace((file.Extension), "").Replace(" ", "") + "-192kpbs.mp3");
             _resultBuilder = new ResultBuilder(
-                $"{file.DirectoryName}\\{file.Name.Replace((file.Extension), "").Replace(" ", "") + Guid.NewGuid() + file.Extension.ToLower()}",
+                resultPath,
                 new AudioModel
                 {
-                    Integrated = "-16",
+                    Integrated = "-9",
                     TruePeak = "-1.5",
                     LRA = "11"
                 });
 
-            var firstPassArgs = $" -i \"{file.FullName}\" -af loudnorm=I={_resultBuilder.OutputModel.Integrated}:TP={_resultBuilder.OutputModel.TruePeak}:LRA={_resultBuilder.OutputModel.LRA}:print_format=summary -f null -";
+            var firstPassArgs = $" -i \"{file.FullName}\" -af loudnorm=print_format=summary -f null -";
             var firstPassResult = _executeProcess.Run(firstPassArgs);
 
             _resultBuilder.ResultModel = firstPassResult;
 
-            var secondPassArguments = $" -i \"{file.FullName}\" -af loudnorm=I={_resultBuilder.OutputModel.Integrated}:TP={_resultBuilder.OutputModel.TruePeak}:LRA={_resultBuilder.OutputModel.LRA}:measured_I={_resultBuilder.ResultModel.Integrated}:measured_TP={_resultBuilder.ResultModel.TruePeak}:measured_LRA={_resultBuilder.ResultModel.LRA}:measured_thresh={_resultBuilder.ResultModel.Threshold}:linear=true:print_format=summary  -ar 192k {_resultBuilder.OutputFile}";
+            var secondPassArguments = $" -i \"{file.FullName}\"  -ab 192k -af loudnorm=I={_resultBuilder.OutputModel.Integrated}:LRA={_resultBuilder.OutputModel.LRA}:measured_I={_resultBuilder.ResultModel.Integrated}:measured_TP={_resultBuilder.ResultModel.TruePeak}:measured_LRA={_resultBuilder.ResultModel.LRA}:measured_thresh={_resultBuilder.ResultModel.Threshold}:linear=true:print_format=summary  -ar 48k {_resultBuilder.OutputFile}";
             var secondPassResult = _executeProcess.Run(secondPassArguments);
+
+            return resultPath;
         }
     }
 }

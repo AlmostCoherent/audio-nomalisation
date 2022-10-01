@@ -7,13 +7,11 @@ namespace NormaliseAudio.Api.Controllers
     public class AudioController : Controller
     {
         private readonly IFileCreator _fileCreator;
-        private readonly IBaseFileConfig _baseFileConfig;
         private readonly ILUFSProvider _lufsProvider;
 
-        public AudioController(IFileCreator fileCreator, IBaseFileConfig baseFileConfig, ILUFSProvider lufsProvider)
+        public AudioController(IFileCreator fileCreator, ILUFSProvider lufsProvider)
         {
             _fileCreator = fileCreator ?? throw new ArgumentNullException(nameof(fileCreator));
-            _baseFileConfig = baseFileConfig ?? throw new ArgumentNullException(nameof(baseFileConfig));
             _lufsProvider = lufsProvider ?? throw new ArgumentNullException(nameof(lufsProvider));
         }
 
@@ -25,73 +23,37 @@ namespace NormaliseAudio.Api.Controllers
         {
             if (CheckIfAcceptedAudioFile(formFile))
             {
-                _baseFileConfig.InputFileName = formFile.FileName;
-                var stream = new MemoryStream(new byte[formFile.Length]);
-                await formFile.CopyToAsync(stream, cancellationToken);
-                await _fileCreator.CreateFromStream(stream);
-                _lufsProvider.SetLufsOfInput(Path.Combine(_baseFileConfig.InputPath, _baseFileConfig.InputFileName));
+                string fileLocation;
+                using (var stream = new MemoryStream(new byte[formFile.Length]))
+                {
+                    await formFile.CopyToAsync(stream, cancellationToken);
+                    fileLocation = _fileCreator.CreateFromStream(stream, formFile.FileName);
+                }
+                var outputLocation = _lufsProvider.AdjustLufsOfInput(fileLocation);
+                FileInfo returnFileInfo = new FileInfo(outputLocation);
 
-                return Ok(await _fileCreator.CreateFromStream(stream));
+                byte[] filedata = System.IO.File.ReadAllBytes(outputLocation);
+                var cd = new System.Net.Mime.ContentDisposition
+                {
+                    FileName = returnFileInfo.Name,
+                    Inline = true,
+                };
+
+                Response.Headers.Append("Content-Disposition", cd.ToString());
+                Response.Headers.ContentType = "audio/mpeg";
+
+                return File(filedata, formFile.ContentType);
             }
             else
             {
                 return BadRequest(new { message = "Invalid file extension. Accepted types are: wav, mp3 and aiff. " });
             }
-
-            string filename = "File.pdf";
-            string filepath = AppDomain.CurrentDomain.BaseDirectory + "/Path/To/File/" + filename;
-            byte[] filedata = System.IO.File.ReadAllBytes(filepath);
-
-            var cd = new System.Net.Mime.ContentDisposition
-            {
-                FileName = filename,
-                Inline = true,
-            };
-
-            Response.Headers.Append("Content-Disposition", cd.ToString());
-            Response.Headers.ContentType = formFile.ContentType;            
-
-            return File(filedata, formFile.ContentType);
         }
 
         private bool CheckIfAcceptedAudioFile(IFormFile file)
         {
             var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
             return (extension == ".wav" || extension == ".mp3"); // Change the extension based on your need
-        }
-
-        private async Task<bool> WriteFile(IFormFile file)
-        {
-            bool isSaveSuccess = false;
-            string fileName;
-            try
-            {
-                var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
-                fileName = DateTime.Now.Ticks + extension; //Create a new Name for the file due to security reasons.
-
-                var pathBuilt = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\files");
-
-                if (!Directory.Exists(pathBuilt))
-                {
-                    Directory.CreateDirectory(pathBuilt);
-                }
-
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "Upload\\files",
-                   fileName);
-
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-
-                isSaveSuccess = true;
-            }
-            catch (Exception e)
-            {
-                //log error
-            }
-
-            return isSaveSuccess;
         }
     }
 }

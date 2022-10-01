@@ -26,7 +26,7 @@ namespace FFMPEGProducer
             var gmlfs = new LUFSProvider((IExecuteProcess)serviceProvider.GetService(typeof(IExecuteProcess)));
             var inputFile = @"C:\repos\audio\NormaliseAudio\TestAudio\Serum01-Fmin.wav";
             //Act
-            gmlfs.SetLufsOfInput(inputFile);
+            gmlfs.AdjustLufsOfInput(inputFile);
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

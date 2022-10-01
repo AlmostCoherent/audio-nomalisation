@@ -7,6 +7,6 @@
         /// </summary>
         /// <param name="formFile"></param>
         /// <returns></returns>
-        Task<string> CreateFromStream(Stream formFile);
+        string CreateFromStream(Stream formFile, string fileName, string? path = null);
     }
 }
