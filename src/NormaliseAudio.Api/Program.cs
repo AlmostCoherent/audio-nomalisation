@@ -8,39 +8,39 @@ namespace NormaliseAudio.Api
     {
         public static void Main(string[] args)
         {
+            using var loggerFactory = LoggerFactory.Create(loggingBuilder => loggingBuilder
+                .SetMinimumLevel(LogLevel.Trace)
+                .AddConsole());
+
+            ILogger<Program> programLogger = loggerFactory.CreateLogger<Program>();
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.WebHost.ConfigureKestrel((context, serverOptions) =>
-            {
-                serverOptions.Limits.MaxRequestBodySize = 73400320;
-            });
+
+            ILogger<Startup> startupLogger = loggerFactory.CreateLogger<Startup>();
+            var startup = new Startup(builder.Configuration, startupLogger);
+
             // Add services to the container.
-
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            builder.Services.AddFFMpegServices();
-            builder.Services.AddNormaliseAudioFileServices();
+            startup.ConfigureServices(builder.Services); 
 
             var app = builder.Build();
-
+            startup.Configure(app, builder.Environment);
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
+            //builder.WebHost.ConfigureKestrel((context, serverOptions) =>
+            //{
+            //    serverOptions.Limits.MaxRequestBodySize = 73400320;
+            //});
+            // Add services to the container.
 
 
-            app.MapControllers();
-
-            app.Run();
         }
+
+        //public static IWebHostBuilder CreateHostBuilder(string[] args) =>
+        //    Host.CreateDefaultBuilder(args)
+        //    .ConfigureWebHostDefaults(webBuilder =>
+        //    {
+        //        webBuilder.UseStartup<Startup>();
+        //    });
+        //    // set serilog as default logging provider
+
     }
 }
