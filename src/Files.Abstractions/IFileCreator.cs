@@ -1,4 +1,6 @@
-﻿namespace Files.Abstractions
+﻿using System.IO;
+
+namespace Files.Abstractions
 {
     public interface IFileCreator
     {

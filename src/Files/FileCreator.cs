@@ -21,7 +21,7 @@ namespace Files
             _logger.LogInformation($"Writing file.");
             try
             {
-                using (var fileStream = File.Create(fileStoreLocation))
+                using (var fileStream = File.Create(fileStoreLocation)) 
                 {
                     formFile.Seek(0, SeekOrigin.Begin);
                     formFile.CopyTo(fileStream);
