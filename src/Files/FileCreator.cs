@@ -5,12 +5,10 @@ namespace Files
 {
     public class FileCreator : IFileCreator
     {
-        private readonly IBaseFileConfig _baseFileConfig;
         private readonly ILogger<FileCreator> _logger;
 
-        public FileCreator(IBaseFileConfig baseFileConfig, ILogger<FileCreator> logger)
+        public FileCreator(ILogger<FileCreator> logger)
         {
-            _baseFileConfig = baseFileConfig ?? throw new ArgumentNullException(nameof(baseFileConfig));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 

@@ -9,6 +9,7 @@ namespace Files
         {
             services.AddSingleton<IBaseFileConfig, BaseFileConfig>();
             services.AddSingleton<IFileCreator, FileCreator>();
+            services.AddSingleton<IFileRemover, FileRemover>();
         }
     }
 }

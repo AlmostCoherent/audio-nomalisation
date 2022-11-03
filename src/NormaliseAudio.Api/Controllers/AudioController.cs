@@ -7,11 +7,13 @@ namespace NormaliseAudio.Api.Controllers
     public class AudioController : Controller
     {
         private readonly IFileCreator _fileCreator;
+        private readonly IFileRemover _fileRemover;
         private readonly ILUFSProvider _lufsProvider;
 
-        public AudioController(IFileCreator fileCreator, ILUFSProvider lufsProvider)
+        public AudioController(IFileCreator fileCreator, IFileRemover fileRemover, ILUFSProvider lufsProvider)
         {
             _fileCreator = fileCreator ?? throw new ArgumentNullException(nameof(fileCreator));
+            _fileRemover = fileRemover ?? throw new ArgumentNullException(nameof(fileRemover));
             _lufsProvider = lufsProvider ?? throw new ArgumentNullException(nameof(lufsProvider));
         }
 
@@ -33,6 +35,17 @@ namespace NormaliseAudio.Api.Controllers
                 FileInfo returnFileInfo = new FileInfo(outputLocation);
 
                 byte[] filedata = System.IO.File.ReadAllBytes(outputLocation);
+
+                try
+                {
+                    _fileRemover.RemoveByPath(fileLocation);
+                    _fileRemover.RemoveByPath(outputLocation);
+                }
+                catch(Exception ex)
+                {
+                    throw;
+                }
+                
                 var cd = new System.Net.Mime.ContentDisposition
                 {
                     FileName = returnFileInfo.Name,

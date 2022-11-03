@@ -11,14 +11,28 @@ namespace Files.Tests
         [TestMethod()]
         public void CreateFromStreamTest()
         {
+            // Arrange
             var logger = new Mock<ILogger<FileCreator>>();
-            var mock = new Mock<IBaseFileConfig>();
-            mock.Setup(m => m.OutputPath)
-                .Returns(Directory.GetParent(Environment.CurrentDirectory).ToString());
             
-            var classUnderTest = new FileCreator(mock.Object, logger.Object);
+            var classUnderTest = new FileCreator(logger.Object);
+    
+            // Act
             var result = classUnderTest.CreateFromStream(new MemoryStream(), "test.txt");
-            Assert.Fail();
+            
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod()]
+        public void CreateFromStreamTest_Failure()
+        {
+            // Arrange
+            var logger = new Mock<ILogger<FileCreator>>();
+
+            var classUnderTest = new FileCreator(logger.Object);
+
+            // Assert
+            Assert.ThrowsException<IOException>(() => classUnderTest.CreateFromStream(new MemoryStream(), "test.txt//"));
         }
     }
 }
