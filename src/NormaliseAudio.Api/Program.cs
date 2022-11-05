@@ -24,23 +24,6 @@ namespace NormaliseAudio.Api
 
             var app = builder.Build();
             startup.Configure(app, builder.Environment);
-            // Configure the HTTP request pipeline.
-            //builder.WebHost.ConfigureKestrel((context, serverOptions) =>
-            //{
-            //    serverOptions.Limits.MaxRequestBodySize = 73400320;
-            //});
-            // Add services to the container.
-
-
         }
-
-        //public static IWebHostBuilder CreateHostBuilder(string[] args) =>
-        //    Host.CreateDefaultBuilder(args)
-        //    .ConfigureWebHostDefaults(webBuilder =>
-        //    {
-        //        webBuilder.UseStartup<Startup>();
-        //    });
-        //    // set serilog as default logging provider
-
     }
 }
