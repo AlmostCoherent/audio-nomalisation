@@ -19,6 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Files", "src\Files\Files.cs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Files.Tests", "src\Files.Tests\Files.Tests.csproj", "{8EB04823-007F-41E9-8040-43CB413D531A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution items", "{71AE9561-F816-4DAD-ADBE-D9E235165C7F}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pwsh-commands.txt = azure-pwsh-commands.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

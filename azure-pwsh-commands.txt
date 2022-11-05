@@ -1,0 +1,8 @@
+## Delete existing container ##
+az webapp config container delete --resource-group normalise-audio-rg --name normalise-audio
+
+## Set web app to new container ##
+az webapp config container set --name normalise-audio --resource-group normalise-audio-rg --docker-custom-image-name normaliseaudioacr.azurecr.io/normalise:latest --docker-registry-server-url https://normaliseaudioacr.azurecr.io
+
+## list repos in ACR ##
+az acr repository list -n normaliseaudioacr

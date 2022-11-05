@@ -1,6 +1,8 @@
 ﻿using Files;
 using FFmpeg;
 using FFMpeg;
+using Microsoft.Extensions.Configuration;
+using Microsoft.OpenApi.Models;
 
 namespace NormaliseAudio.Api
 {
@@ -9,6 +11,7 @@ namespace NormaliseAudio.Api
     /// </summary>
     public class Startup
     {
+        public IConfiguration Configuration { get; }
         private readonly IConfiguration configuration;
         private readonly ILogger<Startup> logger;
 
@@ -28,12 +31,29 @@ namespace NormaliseAudio.Api
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLogging(builder => { 
+            services.AddLogging(builder => {
+                builder.ClearProviders();
                 builder.AddConsole();
+                builder.AddApplicationInsights();
+                builder.AddFilter<Microsoft.Extensions.Logging.ApplicationInsights.ApplicationInsightsLoggerProvider>("", LogLevel.Trace);
             });
+
+            this.logger.LogInformation("Configure services.");
             services.AddControllers();
             services.AddNormaliseAudioFileServices();
             services.AddFFMpegServices();
+
+            this.logger.LogInformation("Configure app insights.");
+            services.AddApplicationInsightsTelemetry(this.configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
+            });
+
         }
 
         /// <summary>
@@ -41,7 +61,6 @@ namespace NormaliseAudio.Api
         /// </summary>
         /// <param name="app">An <see cref="IApplicationBuilder"/> instance</param>
         /// <param name="env">An <see cref="IWebHostEnvironment"/> instance</param>
-        /// <param name="logger">An <see cref="ILogger{TCategoryName}"/>instance</param>
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {
             if (!app.Environment.IsDevelopment())
@@ -51,15 +70,17 @@ namespace NormaliseAudio.Api
                 app.UseHsts();
             }
 
+            app.Logger.LogInformation("Configure app.");
             app.UseHttpLogging();
             app.UseRequestLocalization();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
+            app.UseSwagger();
             app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Audio API");
+                    c.SwaggerEndpoint("v1/swagger.json", "Audio API");
                 })
             .UseEndpoints(b => b.MapControllers());
             app.Run();
