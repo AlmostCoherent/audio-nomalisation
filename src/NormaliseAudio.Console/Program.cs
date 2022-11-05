@@ -1,4 +1,5 @@
 ﻿using FFMpeg;
+using FFMpeg.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -23,9 +24,9 @@ namespace FFMPEGProducer
                                         .BuildServiceProvider();
 
             var gmlfs = new LUFSProvider((IExecuteProcess)serviceProvider.GetService(typeof(IExecuteProcess)));
-            var inputFile = @"D:\\OneDrive\\Music\\SubCatTracks\\DevilairxSubCatEP\\SubCat-Hyenas[MST].wav";
+            var inputFile = @"C:\repos\audio\NormaliseAudio\TestAudio\Serum01-Fmin.wav";
             //Act
-            gmlfs.GetMeLUFS(inputFile);
+            gmlfs.AdjustLufsOfInput(inputFile);
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

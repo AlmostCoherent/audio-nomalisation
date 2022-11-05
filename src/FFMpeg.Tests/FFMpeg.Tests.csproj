@@ -20,10 +20,4 @@
     <ProjectReference Include="..\FFMpeg\FFMpeg.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="TestAudio\XF_HatAmp001.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

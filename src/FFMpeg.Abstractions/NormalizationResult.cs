@@ -1,4 +1,4 @@
-﻿namespace FFMpeg
+﻿namespace FFMpeg.Abstractions
 {
     public class NormalizationResult
     {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using FFMpeg.Abstractions;
 using Moq;
 
-namespace FFMpegTests
+namespace FFMpeg.Tests
 {
     [TestClass()]
     public class ExecuteProcessTests
